@@ -6,6 +6,9 @@ import App from "./App";
 import { Router, Routes, Route } from "@solidjs/router";
 import { Nav } from "./Nav";
 import { navLinks } from "./common/navlinks";
+import { ThemeProvider } from "solid-styled-components";
+import { darkTheme } from "./common/themes";
+import { Background } from "./index.styled";
 
 const root = document.getElementById("root");
 
@@ -17,13 +20,17 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 
 render(() => (
     <Router>
-        <Nav />
-        <Routes>
-            <Route path="/" component={App}></Route>
-            <For each={navLinks}>{(navLink) =>
-                <Route path={navLink.path} component={navLink.component}></Route>
-            }
-            </For>
-        </Routes>
+        <ThemeProvider theme={darkTheme}>
+            <Nav />
+            <Background>
+                <Routes>
+                    <Route path="/" component={App}></Route>
+                    <For each={navLinks}>{(navLink) =>
+                        <Route path={navLink.path + (navLink.dynamicPath ?? "")} component={navLink.component}></Route>
+                    }
+                    </For>
+                </Routes>
+            </Background>
+        </ThemeProvider>
     </Router>
 ), root!);
